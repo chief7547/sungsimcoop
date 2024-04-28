@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>성심장묘 견적 프로그램</title>
+  <style>
+    body {
+      font-family: 'Noto Sans KR', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f5f5f5;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    h1 {
+      text-align: center;
+      color: #333;
+      font-size: 32px;
+      margin-bottom: 30px;
+    }
+
+    .form-and-image-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 30px;
+    }
+
+    .form-container {
+        flex: 1;
+        margin-right: 30px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      font-size: 18px;
+      font-weight: bold;
+      margin-bottom: 10px;
+      color: #333;
+    }
+
+    select {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 16px;
+      color: #333;
+      background-color: #fff;
+      transition: border-color 0.3s ease;
+    }
+
+    select:focus {
+      outline: none;
+      border-color: #4CAF50;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 12px 24px;
+      border: none;
+      border-radius: 4px;
+      font-size: 16px;
+      font-weight: bold;
+      text-align: center;
+      text-decoration: none;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .btn-primary {
+      background-color: #4CAF50;
+      color: #fff;
+    }
+
+    .btn-primary:hover {
+      background-color: #45a049;
+    }
+
+    .btn-secondary {
+      background-color: #f44336;
+      color: #fff;
+    }
+
+    .btn-secondary:hover {
+      background-color: #d32f2f;
+    }
+
+    .cart-section {
+      margin-top: 30px;
+      background-color: #fff;
+      border-radius: 5px;
+      padding: 30px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .cart-section h2 {
+      font-size: 24px;
+      color: #333;
+      margin-bottom: 20px;
+    }
+
+    .cart-list {
+      list-style-type: none;
+      padding: 0;
+    }
+
+    .cart-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px;
+      border-bottom: 1px solid #eee;
+    }
+
+    .item-info {
+      flex-grow: 1;
+      font-size: 18px;
+      color: #333;
+    }
+
+    .remove-button {
+      background-color: transparent;
+      border: none;
+      color: #f44336;
+      font-size: 18px;
+      cursor: pointer;
+      transition: color 0.3s ease;
+    }
+
+    .remove-button:hover {
+      color: #d32f2f;
+    }
+
+    .total-price {
+      font-size: 24px;
+      font-weight: bold;
+      color: #333;
+      margin-top: 20px;
+      text-align: right;
+    }
+
+    .image-section {
+        flex: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .image-section img {
+        max-width: 100%;
+        max-height: 400px;
+        object-fit: contain;
+        border-radius: 5px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .notice-section {
+        margin-top: 30px;
+        background-color: #f9f9f9;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        padding: 20px;
+      }
+      
+      .notice-section h2 {
+        font-size: 24px;
+        color: #333;
+        margin-bottom: 10px;
+      }
+      
+      .notice-section ul {
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+      }
+      
+      .notice-section li {
+        font-size: 16px;
+        color: #666;
+        margin-bottom: 5px;
+      }
+
+
+    @media screen and (max-width: 768px) {
+        .form-and-image-container {
+          flex-direction: column;
+          align-items: center;
+        }
+      
+        .form-container {
+          margin-right: 0;
+          margin-bottom: 30px;
+        }
+      
+        .image-section {
+          max-width: 100%;
+        }
+      }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>성심장묘 견적 프로그램</h1>
+    <div class="form-and-image-container">
+        <div class="form-container">
+        <div class="form-group">
+            <label for="mainCategory">주 카테고리:</label>
+            <select id="mainCategory" onchange="updateSubCategories(); showProductImage();">
+            <option value="">선택하세요</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="subCategory">세부 카테고리:</label>
+            <select id="subCategory" onchange="updateLowerCategories(); showProductImage();">
+            <option value="">선택하세요</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="lowerCategory">1차 세부 메뉴:</label>
+            <select id="lowerCategory" onchange="updateSubLowerCategories(); showProductImage();">
+            <option value="">선택하세요</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="subLowerCategory">2차 세부 메뉴:</label>
+            <select id="subLowerCategory" onchange="showProductImage(); showProductImage();">
+            <option value="">선택하세요</option>
+            </select>
+        </div>
+        <button type="button" class="btn btn-secondary" onclick="clearForm()">초기화</button>
+        <button type="button" class="btn btn-primary" onclick="addToCart()">담기</button>
+    </div>
+    <div class="image-section">
+      <img id="productImage" src="" alt="카테고리를 선택하면 이미지가 나옵니다">
+    </div>
+  </div>
+
+    <div class="cart-section">
+      <h2>장바구니</h2>
+      <ul id="cartList" class="cart-list"></ul>
+      <p class="total-price">총 가격: <span id="totalPrice">0</span>원</p>
+    </div>
+
+    <div class="notice-section">
+        <h2>주의사항</h2>
+        <ul>
+          <li>모든 석물 설치비 별도, 산역 시 산역팀이 설치(산역팀이 없다면 특수인력에서 석공 추가)</li>
+          <li>둘레석, 납골묘 및 비석 3자 이상은 장비(공투포크레인)추가가 필요합니다.</li>
+          <li>규격 외 석물들은 상담 후 결정 (010-7441-2590)</li>
+          <li>비석 및 상석에 새겨지는 각자비는 별도 입니다.(누운와비 1자만 각자비 포함)</li>
+          <li>기타 문의는 010-2081-4448로 연락 바랍니다.</li>
+        </ul>
+      </div>
+
+  </div>
+
+  <script>
+    let categories = {};
+
+    const csvData = `
+      주 카테고리,세부 카테고리,1차 세부 메뉴,2차 세부 메뉴,가격
+      장묘석물,사각석,1단,(1500×2100×200),"₩600,000"
+      장묘석물,사각석,1단,(1500×2100×300),"₩700,000"
+      장묘석물,사각석,1단,(1800×2400×200),"₩700,000"
+      장묘석물,사각석,1단,(1800×2400×300),"₩800,000"
+      장묘석물,사각석,3단,(1500×2100×600),"₩1,100,000"
+      장묘석물,사각석,3단,(1800×2400×600),"₩1,300,000"
+      장묘석물,사각석,3단,(2100×2700×600),"₩1,600,000"
+      장묘석물,둘레석,통돌둘레석,(1500×2400x520),"₩1,800,000"
+      장묘석물,둘레석,통돌둘레석,(1800×2400x520),"₩1,900,000"
+      장묘석물,둘레석,통돌둘레석,(2100×2700x520),"₩2,300,000"
+      장묘석물,둘레석,원형둘레석,8자(단장용),"₩1,600,000"
+      장묘석물,둘레석,원형둘레석,9자(합장용),"₩2,100,000"
+      장묘석물,둘레석,원형둘레석,10자(합장용),"₩2,400,000"
+      장묘석물,둘레석,원형둘레석,12자(합장용),"₩3,200,000"
+      장묘석물,둘레석,미니둘레석,(1200×1400),"₩400,000"
+      장묘석물,석실,(내경규격 25×49×30),기 당,"₩150,000"
+      납골묘,사각납골묘,1층,12기,"₩4,500,000"
+      납골묘,사각납골묘,1층,24기,"₩6,500,000"
+      납골묘,사각납골묘,1층,28기,"₩8,000,000"
+      납골묘,사각납골묘,1층,32기,"₩11,000,000"
+      납골묘,사각납골묘,2층,48기,"₩10,000,000"
+      납골묘,사각납골묘,2층,56기,"₩14,000,000"
+      납골묘,사각납골묘,2층,64기,"₩17,000,000"
+      납골묘,원형납골묘,1층,24기,"₩8,500,000"
+      납골묘,원형납골묘,1층,28기,"₩11,000,000"
+      납골묘,원형납골묘,1층,32기,"₩14,000,000"
+      납골묘,원형납골묘,2층,48기,"₩14,000,000"
+      납골묘,원형납골묘,2층,56기,"₩16,000,000"
+      납골묘,원형납골묘,2층,64기,"₩18,000,000"
+      비석,세운와비,1.5자,,"₩350,000"
+      비석,세운와비,2자,,"₩400,000"
+      비석,세운와비,2.5자,,"₩700,000"
+      비석,세운와비,3자,,"₩1,100,000"
+      비석,누운와비,1자(각자비 포함),,"₩300,000"
+      비석,누운와비,1.5자,,"₩350,000"
+      비석,누운와비,2자,,"₩400,000"
+      비석,누운와비,2.5자,,"₩700,000"
+      비석,표석,2.5자,,"₩350,000"
+      비석,표석,3자,,"₩400,000"
+      비석,표석,3.5자,,"₩700,000"
+      비석,갓비석,4자,,"₩1,300,000"
+      비석,갓비석,4.5자,,"₩1,650,000"
+      비석,동물비석,용,,"₩4,000,000"
+      비석,동물비석,거북이,,"₩4,000,000"
+      상석,일반상석,3자(900×600),,"₩650,000"
+      상석,일반상석,3.5자(1050×750),,"₩850,000"
+      상석,일반상석,4자(1200×900),,"₩1,050,000"
+      상석,미니상석,4cm(두께),,"₩100,000"
+      상석,미니상석,15cm(두께),,"₩350,000"
+      수목장,주목 5년생 이상(싯가),,,₩0
+      수목장,소나무 싯가,,,₩0
+      기타석물,망두,6.5자,,"₩650,000"
+      기타석물,망두,7.5자,,"₩750,000"
+      기타석물,용호망두,7자,,"₩1,800,000"
+      기타석물,용호망두,8자,,"₩2,200,000"
+      기타석물,장명등,6자,,"₩1,300,000"
+      기타석물,화병,,,"₩70,000"
+      산역인력,산역전문인력,"반장1, 인부2, 잔디기본(25평)",,"₩1,700,000"
+      산역인력,산역전문인력,산역인부 추가(인당),,"₩200,000"
+      산역인력,산역전문인력,잔디추가(평당),,"₩12,000"
+      산역인력,특수인력,장비(공투포크레인),,"₩600,000"
+      산역인력,특수인력,기계톱,,"₩300,000"
+      산역인력,특수인력,석공(산역없이 설치 시),,"₩350,000"
+      장지음식,1인당,,,"₩15,000"
+      장지음식,제사,,,"₩300,000"
+      장지음식,노제(조문상),,,"₩150,000"
+    `;
+
+    const parsedData = parseCsvData(csvData);
+    const headerRow = parsedData[0];
+    const rows = parsedData.slice(1);
+    const mainCategoryIndex = headerRow.indexOf('주 카테고리');
+    const subCategoryIndex = headerRow.indexOf('세부 카테고리');
+    const lowerCategoryIndex = headerRow.indexOf('1차 세부 메뉴');
+    const subLowerCategoryIndex = headerRow.indexOf('2차 세부 메뉴');
+
+    for (let i = 0; i < rows.length; i++) {
+      const row = rows[i];
+      const mainCategory = row[0];
+      const subCategory = row[1];
+      const lowerCategory = row[2];
+      const subLowerCategory = row[3];
+    
+      if (mainCategory) {
+        if (!categories[mainCategory]) {
+          categories[mainCategory] = {};
+        }
+        if (subCategory) {
+          if (!categories[mainCategory][subCategory]) {
+            categories[mainCategory][subCategory] = {};
+          }
+          if (lowerCategory) {
+            if (!categories[mainCategory][subCategory][lowerCategory]) {
+              categories[mainCategory][subCategory][lowerCategory] = [];
+            }
+            if (subLowerCategory) {
+              categories[mainCategory][subCategory][lowerCategory].push(subLowerCategory);
+            }
+          }
+        }
+      }
+    }
+
+    const mainCategorySelect = document.getElementById("mainCategory");
+    for (const category in categories) {
+      const option = document.createElement("option");
+      option.value = category;
+      option.text = category;
+      mainCategorySelect.add(option);
+    }
+
+    function updateSubCategories() {
+      const mainCategorySelect = document.getElementById("mainCategory");
+      const subCategorySelect = document.getElementById("subCategory");
+      const selectedMainCategory = mainCategorySelect.value;
+
+      subCategorySelect.innerHTML = '<option value="">선택하세요</option>';
+      for (const subCategory in categories[selectedMainCategory]) {
+        const option = document.createElement("option");
+        option.value = subCategory;
+        option.text = subCategory;
+        subCategorySelect.add(option);
+      }
+
+      updateLowerCategories();
+    }
+
+    function updateLowerCategories() {
+      const mainCategorySelect = document.getElementById("mainCategory");
+      const subCategorySelect = document.getElementById("subCategory");
+      const lowerCategorySelect = document.getElementById("lowerCategory");
+      const selectedMainCategory = mainCategorySelect.value;
+      const selectedSubCategory = subCategorySelect.value;
+
+      lowerCategorySelect.innerHTML = '<option value="">선택하세요</option>';
+      for (const lowerCategory in categories[selectedMainCategory][selectedSubCategory]) {
+        const option = document.createElement("option");
+        option.value = lowerCategory;
+        option.text = lowerCategory;
+        lowerCategorySelect.add(option);
+      }
+
+      updateSubLowerCategories();
+    }
+
+    function updateSubLowerCategories() {
+      const mainCategorySelect = document.getElementById("mainCategory");
+      const subCategorySelect = document.getElementById("subCategory");
+      const lowerCategorySelect = document.getElementById("lowerCategory");
+      const subLowerCategorySelect = document.getElementById("subLowerCategory");
+      const selectedMainCategory = mainCategorySelect.value;
+      const selectedSubCategory = subCategorySelect.value;
+      const selectedLowerCategory = lowerCategorySelect.value;
+
+      subLowerCategorySelect.innerHTML = '<option value="">선택하세요</option>';
+      if (categories[selectedMainCategory] && categories[selectedMainCategory][selectedSubCategory] && categories[selectedMainCategory][selectedSubCategory][selectedLowerCategory]) {
+        const subLowerCategories = categories[selectedMainCategory][selectedSubCategory][selectedLowerCategory];
+        for (const subLowerCategory of subLowerCategories) {
+          const option = document.createElement("option");
+          option.value = subLowerCategory;
+          option.text = subLowerCategory;
+          subLowerCategorySelect.add(option);
+        }
+      }
+    }
+
+    function clearForm() {
+        document.getElementById("mainCategory").selectedIndex = 0;
+        document.getElementById("subCategory").innerHTML = '<option value="">선택하세요</option>';
+        document.getElementById("lowerCategory").innerHTML = '<option value="">선택하세요</option>';
+        document.getElementById("subLowerCategory").innerHTML = '<option value="">선택하세요</option>';
+        
+        // 이미지 초기화
+        const productImageElement = document.getElementById("productImage");
+        productImageElement.src = "";
+        productImageElement.alt = "";
+      }
+    let cart = [];
+
+    function addToCart() {
+      const mainCategorySelect = document.getElementById("mainCategory");
+      const subCategorySelect = document.getElementById("subCategory");
+      const lowerCategorySelect = document.getElementById("lowerCategory");
+      const subLowerCategorySelect = document.getElementById("subLowerCategory");
+    
+      const selectedMainCategory = mainCategorySelect.value;
+      const selectedSubCategory = subCategorySelect.value;
+      const selectedLowerCategory = lowerCategorySelect.value;
+      const selectedSubLowerCategory = subLowerCategorySelect.value;
+    
+      if (selectedMainCategory && selectedSubCategory) {
+        const hasLowerCategories = lowerCategorySelect.options.length > 1;
+        const hasSubLowerCategories = subLowerCategorySelect.options.length > 1;
+    
+        if ((hasLowerCategories && !selectedLowerCategory) || (hasSubLowerCategories && !selectedSubLowerCategory)) {
+          alert("1차, 2차 세부 메뉴가 있는 경우 모두 선택해야 합니다.");
+          return;
+        }
+    
+        const item = {
+          name: `${selectedMainCategory} > ${selectedSubCategory}`,
+          price: getPrice(selectedMainCategory, selectedSubCategory, selectedLowerCategory, selectedSubLowerCategory)
+        };
+    
+        if (selectedLowerCategory) {
+          item.name += ` > ${selectedLowerCategory}`;
+        }
+    
+        if (selectedSubLowerCategory) {
+          item.name += ` > ${selectedSubLowerCategory}`;
+        }
+    
+        cart.push(item);
+        updateCart();
+        clearForm();
+      } else {
+        alert("주 카테고리와 세부 카테고리는 필수 선택 항목입니다.");
+      }
+    }
+
+    function parseCsvData(csvData) {
+      const rows = csvData.trim().split('\n');
+      const parsedData = [];
+    
+      for (let i = 0; i < rows.length; i++) {
+        const row = rows[i].split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
+        const parsedRow = row.map(field => field.trim().replace(/^"(.*)"$/, '$1'));
+        parsedData.push(parsedRow);
+      }
+    
+      return parsedData;
+    }
+
+    function getPrice(mainCategory, subCategory, lowerCategory, subLowerCategory) {
+      for (let i = 0; i < rows.length; i++) {
+        const row = rows[i];
+        if (
+          row[0] === mainCategory &&
+          row[1] === subCategory &&
+          row[2] === lowerCategory &&
+          row[3] === subLowerCategory
+        ) {
+          const priceString = row[4].replace(/[^0-9]/g, '');
+          return parseInt(priceString);
+        }
+      }
+      return 0;
+    }
+
+    function formatPrice(price) {
+      return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    }
+
+    function removeFromCart(index) {
+      cart.splice(index, 1);
+      updateCart();
+    }
+
+    function updateCart() {
+      const cartList = document.getElementById("cartList");
+      const totalPriceElement = document.getElementById("totalPrice");
+    
+      cartList.innerHTML = "";
+      let totalPrice = 0;
+    
+      for (let i = 0; i < cart.length; i++) {
+        const item = cart[i];
+        const listItem = document.createElement("li");
+        listItem.classList.add("cart-item");
+    
+        const itemInfo = document.createElement("div");
+        itemInfo.classList.add("item-info");
+        itemInfo.innerText = `${item.name} - ${formatPrice(item.price)}원`;
+    
+        const removeButton = document.createElement("button");
+        removeButton.type = "button";
+        removeButton.classList.add("remove-button");
+        removeButton.innerText = "제거";
+        removeButton.onclick = (function(index) {
+          return function() {
+            removeFromCart(index);
+          };
+        })(i);
+    
+        listItem.appendChild(itemInfo);
+        listItem.appendChild(removeButton);
+        cartList.appendChild(listItem);
+    
+        totalPrice += item.price;
+      }
+    
+    
+      totalPriceElement.innerText = formatPrice(totalPrice);
+    }
+
+    function showProductImage() {
+        const mainCategorySelect = document.getElementById("mainCategory");
+        const subCategorySelect = document.getElementById("subCategory");
+        const lowerCategorySelect = document.getElementById("lowerCategory");
+        const subLowerCategorySelect = document.getElementById("subLowerCategory");
+        const productImageElement = document.getElementById("productImage");
+      
+        const selectedMainCategory = mainCategorySelect.value;
+        const selectedSubCategory = subCategorySelect.value;
+        const selectedLowerCategory = lowerCategorySelect.value;
+        const selectedSubLowerCategory = subLowerCategorySelect.value;
+      
+        let imageName = "";
+        let imageAlt = "";
+      
+        if (selectedMainCategory) {
+            imageName = `${selectedMainCategory}`;
+            imageAlt = `${selectedMainCategory}`;
+
+            if(selectedSubCategory) {
+                imageName += `_${selectedSubCategory}`;
+                imageAlt += ` - ${selectedSubCategory}`;
+            
+                if (selectedLowerCategory) {
+                imageName += `_${selectedLowerCategory}`;
+                imageAlt += ` - ${selectedLowerCategory}`;
+                
+                    if (selectedSubLowerCategory) {
+                        imageName += `_${selectedSubLowerCategory}`;
+                        imageAlt += ` - ${selectedSubLowerCategory}`;
+                    }
+                }
+            }
+      
+            imageName = imageName.replace(/\s/g, '_');
+            const imagePath = `images/${imageName}.jpg`;
+            productImageElement.src = imagePath;
+            productImageElement.alt = imageAlt;
+        } else {
+            productImageElement.src = "";
+            productImageElement.alt = "";
+        }
+      }
+  </script>
+</body>
+</html>
